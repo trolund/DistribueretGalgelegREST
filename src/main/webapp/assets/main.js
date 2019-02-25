@@ -1,7 +1,11 @@
+var user;
+
 $(document).ready(function () {
     console.log("ready!");
     $("#loginbtn").click(function () {
         let json = toJSONString($('#LoginForm'));
+        user = JSON.parse(json);
+        console.log(user);
         $.ajax({
             url: 'api/login',
             type: 'POST',

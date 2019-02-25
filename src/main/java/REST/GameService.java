@@ -22,12 +22,42 @@ public class GameService {
                 "<p>AntalForkerteBogstaver : POST </p><a href=\"game/AntalForkerteBogstaver\">game/AntalForkerteBogstaver</a>";
     }
 
+    @POST
+    @Path("/newGame")
+    public boolean startNewGame(@QueryParam("userid") String userid)  {
+        return controller.newGame(userid);
+    }
+
+    @POST
+    @Path("/forceNewGame")
+    public boolean forceNewGame(@QueryParam("userid") String userid)  {
+        try {
+            controller.forceNewGame(userid);
+            return true;
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @POST
+    @Path("/forceDeleteGame")
+    public boolean deleteGame(@QueryParam("userid") String userid)  {
+        try {
+            controller.deleteGame(userid);
+            return true;
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     @GET
     @Path("/synligtord")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getVisabelWord()  {
+    public String getVisabelWord(@QueryParam("userid") String userid)  {
         try {
-            return controller.getVisabelWord();
+            return controller.getVisabelWord(userid);
         } catch (RemoteException e) {
             e.printStackTrace();
             return "";
@@ -36,39 +66,49 @@ public class GameService {
 
     @POST
     @Path("/geatbogstav")
-    public Boolean gessChar(@QueryParam("letter") String letter)  {
+    public boolean gessChar(@QueryParam("letter") String letter, @QueryParam("userid") String userid)  {
         try {
-            return controller.gess(letter);
+            return controller.gess(letter, userid);
         } catch (RemoteException e) {
             e.printStackTrace();
             return false;
         }
     }
 
+    @POST
+    @Path("/tjekWin")
+    public boolean isTheGameWon(@QueryParam("userid") String userid)  {
+        try {
+            return controller.tjekWin(userid);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     @GET
     @Path("/getAntalForkerteBogstaver")
     @Produces(MediaType.TEXT_PLAIN)
-    public int getLife()  {
+    public int getLife(@QueryParam("userid") String userid)  {
         try {
-            return controller.getlife();
+            return controller.getlife(userid);
         } catch (RemoteException e) {
             e.printStackTrace();
             return 0;
         }
     }
 
-    /*
-
-    @GET
-    @Path("/getAntalForkerteBogstaver")
-    @Produces(MediaType.TEXT_PLAIN)
-    public int getLife()  {
+    @DELETE
+    @Path("/destroyGame")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response destroyGame(@QueryParam("userid") String userid)  {
         try {
-            return controller.getlife();
+            controller.deleteGame(userid);
+            return Response.status(200).build();
         } catch (RemoteException e) {
             e.printStackTrace();
-            return 0;
         }
+        return Response.status(204).build();
     }
-*/
+
 }

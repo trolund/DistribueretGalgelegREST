@@ -1,22 +1,23 @@
 package Controller;
 
-import Galgeleg.RMI.Galgelogik;
 import Galgeleg.RMI.IGalgelogik;
+import brugerautorisation.Galgeleg.Galgelogik;
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;
 
+import javax.validation.constraints.Null;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public class MainController {
 
     // static variable single_instance of type Singleton
     private static MainController single_instance = null;
 
-    // variable of type String
-    public String s;
+    private static ArrayList<Container> gamelist = new ArrayList<>();
 
     // private constructor restricted to this class itself
     private MainController()
@@ -31,7 +32,7 @@ public class MainController {
 
         return single_instance;
     }
-
+/*
     private IGalgelogik galgelogik;
 
     {
@@ -44,11 +45,70 @@ public class MainController {
             e.printStackTrace();
         }
     }
+*/
+    public boolean newGame(String userid){
+        Container container =  findegame(userid);
 
-    public Boolean gess(String c) throws RemoteException {
-        galgelogik.gætBogstav(c);
-        galgelogik.logStatus();
-        return galgelogik.erSidsteBogstavKorrekt();
+        if(container == null){  // hvis der ikke findes et spil lav et nyt
+            try {
+                brugerautorisation.Galgeleg.Galgelogik logik = new brugerautorisation.Galgeleg.Galgelogik();
+                logik.hentOrdFraDr();
+                gamelist.add(new Container(userid, logik));
+                return true; // new game statet.
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;  // resume game
+    }
+
+    public void forceNewGame(String userid) throws RemoteException {
+        Container container =  findegame(userid);  // find gamelt spil
+        gamelist.remove(container);  // selt det gamle spil.
+        gamelist.add(new Container(userid, new Galgelogik())); // opret nyt spil.
+    }
+
+    public boolean tjekWin(String userid) throws RemoteException {
+        Container container =  findegame(userid);  // find gamelt spil
+        return container.getGalgelogik().erSpilletVundet();
+    }
+
+    public boolean deleteGame(String userid) throws RemoteException {
+        Container container =  findegame(userid);  // find gamelt spil
+        if(container != null) {
+            gamelist.remove(container);  // selt det gamle spil.
+            return true;
+        }
+        return false;
+    }
+
+    public Container findegame(String userid){  // findes der et spil som er igang?
+        //System.out.println(gamelist);
+        for (Container item:  gamelist) {
+            if (item.getUserID().equals(userid)){
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public boolean gess(String c, String userid) throws RemoteException {
+        Container game = findegame(userid);
+        game.getGalgelogik().gætBogstav(c);
+        logStatus(game.getGalgelogik());
+        return game.getGalgelogik().erSidsteBogstavKorrekt();
+    }
+
+    private void logStatus(brugerautorisation.Galgeleg.Galgelogik galgelogik) {
+        System.out.println("---------- ");
+        System.out.println("- synligtOrd = " + galgelogik.getSynligtOrd());
+        System.out.println("- brugeBogstaver = " + galgelogik.getBrugteBogstaver());
+        int antalLiv = 7-galgelogik.getAntalForkerteBogstaver();
+        System.out.println("Liv tilbage: " + antalLiv);
+        if (galgelogik.erSpilletTabt()) System.out.println("- SPILLET ER TABT");
+        if (galgelogik.erSpilletVundet()) System.out.println("- SPILLET ER VUNDET");
+        asciiHangman(antalLiv);
+        System.out.println("---------- ");
     }
 
     // RMI til jakobs server.
@@ -61,7 +121,6 @@ public class MainController {
             ba = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
             bruger = ba.hentBruger(brugernavn, adgangskode);
             System.out.println("velkommen, " + bruger.brugernavn);
-            System.out.println("Ordet: " + galgelogik.getOrdet());
             return true;
         } catch (NotBoundException e1) {
             e1.printStackTrace();
@@ -73,15 +132,17 @@ public class MainController {
         return false;
     }
 
-    public String getVisabelWord() throws RemoteException {
-          return galgelogik.getSynligtOrd();
+    public String getVisabelWord(String userid) throws RemoteException {
+        Container game = findegame(userid);
+          return game.getGalgelogik().getSynligtOrd();
     }
 
-    public int getlife() throws RemoteException {
-        return galgelogik.getAntalForkerteBogstaver();
+    public int getlife(String userid) throws RemoteException {
+        Container game = findegame(userid);
+        return game.getGalgelogik().getAntalForkerteBogstaver();
     }
-
-    public static void logStatus(IGalgelogik logik) throws RemoteException {
+/*
+    public static void logStatus(Galgelogik logik) throws RemoteException {
         System.out.println("---------- ");
         System.out.println("- synligtOrd = " + logik.getSynligtOrd());
         System.out.println("- brugeBogstaver = " + logik.getBrugteBogstaver());
@@ -92,7 +153,7 @@ public class MainController {
         asciiHangman(antalLiv);
         System.out.println("---------- ");
     }
-
+*/
     private static void asciiHangman(int life){
         String art ="";
         switch (life){
