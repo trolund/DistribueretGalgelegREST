@@ -11,32 +11,28 @@ public interface ISOAPAdapter {
 
     MainController controller = MainController.getInstance();
 
-    String userId = "";
+    @WebMethod ArrayList<String> getBrugteBogstaver(String userId);
 
-    @WebMethod void setUserId(String userId);
+    @WebMethod String getSynligtOrd(String userId);
 
-    @WebMethod ArrayList<String> getBrugteBogstaver();
+    @WebMethod String getOrdet(String userId);
 
-    @WebMethod String getSynligtOrd();
+    @WebMethod int getAntalForkerteBogstaver(String userId);
 
-    @WebMethod String getOrdet();
+    @WebMethod boolean erSidsteBogstavKorrekt(String userId);
 
-    @WebMethod int getAntalForkerteBogstaver();
+    @WebMethod boolean erSpilletVundet(String userId);
 
-    @WebMethod boolean erSidsteBogstavKorrekt();
+    @WebMethod boolean erSpilletTabt(String userId);
 
-    @WebMethod boolean erSpilletVundet();
+    @WebMethod boolean erSpilletSlut(String userId);
 
-    @WebMethod boolean erSpilletTabt();
+    @WebMethod void nulstil(String userId);
 
-    @WebMethod boolean erSpilletSlut();
+    @WebMethod void gætBogstav(String bogstav, String userId);
 
-    @WebMethod void nulstil();
+    @WebMethod void logStatus(String userId);
 
-    @WebMethod void gætBogstav(String bogstav);
-
-    @WebMethod void logStatus();
-
-    @WebMethod void hentOrdFraDr();
+    @WebMethod void hentOrdFraDr(String userId);
 
 }

@@ -2,10 +2,14 @@ package REST;
 
 import Controller.MainController;
 import POJO.LoginFormPOJO;
+import SOAP.ISOAPAdapter;
+import SOAP.SOAPAdapter;
+import SOAP.SOAPServer;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.ws.Endpoint;
 import java.rmi.RemoteException;
 
 @Path("/game")
@@ -13,8 +17,9 @@ public class GameService {
 
     private MainController controller = MainController.getInstance();
 
+
     @GET
-    public String getTest(){
+    public String getDiscription(){
         return "<p>Du bliver nød til at specificere hvilke resurse du ønsker. \n" +
                 "kunne det være:</p>\n" +
                 "<p>for at få syndligt ord: GET </p><a href=\"game/synligtord\">game/synligtord</a>" +
@@ -75,7 +80,7 @@ public class GameService {
         }
     }
 
-    @POST
+    @GET
     @Path("/tjekWin")
     public boolean isTheGameWon(@QueryParam("userid") String userid)  {
         try {
@@ -109,6 +114,18 @@ public class GameService {
             e.printStackTrace();
         }
         return Response.status(204).build();
+    }
+
+    @GET
+    @Path("/ongoingGame")
+    @Produces(MediaType.TEXT_PLAIN)
+    public boolean findGame(@QueryParam("userid") String userid)  {
+        if (controller.findegame(userid) == null){
+            return false;
+        }else{
+            return true;
+        }
+
     }
 
 }

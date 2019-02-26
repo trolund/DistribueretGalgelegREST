@@ -162,12 +162,11 @@ input[type=reset]:active {
     max-width: 450px;
 }
 
-.keyboardbtn {
+button {
     background-color: #56baed;
     border: none;
     color: white;
     padding: 10px;
-    width: 39px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -186,8 +185,11 @@ input[type=reset]:active {
     
     margin: 6px;
 }
+.keyboardbtn{
+    width: 39px;
+}
 
-.keyboardbtn:hover {
+button:hover {
     background-color: #39ace7;
     -moz-transform: scale(1.2);
     -webkit-transform: scale(1.2);
@@ -196,7 +198,7 @@ input[type=reset]:active {
     transform: scale(1.2);
 }
 
-.keyboardbtn:active {
+button:active {
     -moz-transform: scale(0.95);
     -webkit-transform: scale(0.95);
     -o-transform: scale(0.95);

@@ -1,6 +1,7 @@
 package Controller;
 
 import Galgeleg.RMI.IGalgelogik;
+import SOAP.SOAPServer;
 import brugerautorisation.Galgeleg.Galgelogik;
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;
@@ -18,6 +19,13 @@ public class MainController {
     private static MainController single_instance = null;
 
     private static ArrayList<Container> gamelist = new ArrayList<>();
+
+
+    static
+    {
+        SOAPServer soapServer = new SOAPServer();
+        soapServer.startSOAP();
+    }
 
     // private constructor restricted to this class itself
     private MainController()
@@ -54,11 +62,13 @@ public class MainController {
                 brugerautorisation.Galgeleg.Galgelogik logik = new brugerautorisation.Galgeleg.Galgelogik();
                 logik.hentOrdFraDr();
                 gamelist.add(new Container(userid, logik));
+                logStatus(userid);
                 return true; // new game statet.
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
+        logStatus(userid);
         return false;  // resume game
     }
 
@@ -66,6 +76,7 @@ public class MainController {
         Container container =  findegame(userid);  // find gamelt spil
         gamelist.remove(container);  // selt det gamle spil.
         gamelist.add(new Container(userid, new Galgelogik())); // opret nyt spil.
+        logStatus(userid);
     }
 
     public boolean tjekWin(String userid) throws RemoteException {
@@ -77,8 +88,10 @@ public class MainController {
         Container container =  findegame(userid);  // find gamelt spil
         if(container != null) {
             gamelist.remove(container);  // selt det gamle spil.
+            logStatus(userid);
             return true;
         }
+        logStatus(userid);
         return false;
     }
 
@@ -95,13 +108,16 @@ public class MainController {
     public boolean gess(String c, String userid) throws RemoteException {
         Container game = findegame(userid);
         game.getGalgelogik().gætBogstav(c);
-        logStatus(game.getGalgelogik());
+        logStatus(userid);
         return game.getGalgelogik().erSidsteBogstavKorrekt();
     }
 
-    private void logStatus(brugerautorisation.Galgeleg.Galgelogik galgelogik) {
+    private void logStatus(String userid) {
+        Galgelogik galgelogik= findegame(userid).getGalgelogik();
+        System.out.println("Number of games: " + gamelist.size());
         System.out.println("---------- ");
         System.out.println("- synligtOrd = " + galgelogik.getSynligtOrd());
+        System.out.println("ord: ----> " + galgelogik.getOrdet());
         System.out.println("- brugeBogstaver = " + galgelogik.getBrugteBogstaver());
         int antalLiv = 7-galgelogik.getAntalForkerteBogstaver();
         System.out.println("Liv tilbage: " + antalLiv);

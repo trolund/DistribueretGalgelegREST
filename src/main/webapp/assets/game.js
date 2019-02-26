@@ -3,7 +3,7 @@ $(document).ready(function () {
     $('.popup').hide();
     newGame();
     console.log("Game ready!");
-    $('.playerinfo').html("<p>" + user.username + "</p>");
+    $("#playerinfo").html("<p>" + user.username + "</p>");
     GameOver(getlife());
 
 
@@ -16,34 +16,8 @@ $(document).ready(function () {
         $(".popup").hide(300);
     });
 
-});
-
-function setupGameUI() {
     updateWord();
-    let btn = $("#gessbtn");
-    btn.click(function () {
-        console.log('gess: ' + $('#geas').val());
-        $.ajax({
-            url: 'api/game/geatbogstav?letter=' + $('#geas').val() + "&userid=" + user.username,
-            type: 'POST',
-            contentType: 'plain/text',
-            success: function (data, textStatus, jQxhr) {
-                if (data) {
-                    $(".gamelabel").css("color", "green");
-                    $(".gamelabel").html("Correct!"); 
-                } else {
-                    $(".gamelabel").css("color", "red");
-                    $(".gamelabel").html("Nope!" + $('#geas').val() + " is not in the word.");
-                }
-                updateWord();
-            },
-            error: function (jqXhr, textStatus, errorThrown) {
-                console.log('failed' + data);
-                updateWord();
-            }
-        });
-    });
-}
+});
 
 function newGame(){
      $.ajax({
@@ -52,7 +26,9 @@ function newGame(){
         contentType: 'plain/text',
         async: false,
         success: function (data, textStatus, jQxhr) {
-            setupGameUI();
+            getlife();
+            updateWord();
+            $(".gamelabel").html("");
         },
         error: function (jqXhr, textStatus, errorThrown) {
             console.log("fail...");
@@ -68,11 +44,11 @@ function destroyGame(){
         contentType: 'plain/text',
         async: true,
         success: function (data, textStatus, jQxhr) {
-            setupGameUI();
+
+
         },
         error: function (jqXhr, textStatus, errorThrown) {
             console.log("fail...");
-            destroyGame();
         }
     });
 }
@@ -84,14 +60,39 @@ function updateWord() {
         contentType: 'plain/text',
         async: false,
         success: function (data, textStatus, jQxhr) {
-            $('.visWord').html(data.replaceAll('*', '_ '));
+            let word = data.replaceAll('*', '_ ');
+
+            $('.visWord').html(word);
+
+            if(!word.includes('*')){
+                tjekWin();
+            }else {
+                getlife();
+            }
         },
         error: function (jqXhr, textStatus, errorThrown) {
             $('.visWord').text("fail...");
         }
     });
-    
-    getlife();
+}
+
+function tjekWin() {
+    $.ajax({
+        url: 'api/game/tjekWin' + "?userid=" + user.username,
+        type: 'GET',
+        contentType: 'plain/text',
+        success: function (data, textStatus, jQxhr) {
+            if(JSON.parse(data)){
+                $(".popupLabel").html("You Win!");
+                $("#resumebtn").hide();
+                $('.popup').show(300);
+                console.log("win!");
+            }
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+            $('.visWord').text("fail...");
+        }
+    });
 }
 
 function getlife() {
@@ -108,7 +109,6 @@ function getlife() {
         },
         error: function (jqXhr, textStatus, errorThrown) {
             console.log('failed' + data);
-            getlife();
         }
     });
 }
@@ -149,7 +149,7 @@ function GameOver(life){
     $("#resumebtn").hide();
     $('.popup').show(300);
     }
-    
+
 }
 
 function keyboard() {
@@ -191,6 +191,7 @@ function keyboard() {
 
     $('.keyboardbtn').click(function () {
         let gess = $(this).attr('data');
+        var thisbtn = $(this);
         console.log('gess: ' + gess);
 
         $.ajax({
@@ -198,32 +199,23 @@ function keyboard() {
             type: 'POST',
             contentType: 'plain/text',
             success: function (data, textStatus, jQxhr) {
-                let life = getlife();
-                console.log('data:' + data);
-                if (JSON.parse(data)) {  // det er ikke kønt men js opfatter det 
-                    let life = getlife();
+
+                if (JSON.parse(data)) {  // det er ikke kønt men js opfatter det
                     $(".gamelabel").css("color", "green");
                     $(".gamelabel").html("Correct! " + gess +  " is in the word!");
-                    $('.LifeCount').html('Lifes left: ' + life);
                 } else {
-                    let life = getlife();
+                    getlife();
                     $(".gamelabel").css("color", "red");
                     $(".gamelabel").html("Nope! " + gess + " is not in the word.");
-                    $('.LifeCount').html('Lifes left: ' + life);
                 }
-                $('#geas').val('');
+
                 updateWord();
-                updateImg(life);
+                thisbtn.addClass('keyboardbtnDisable');
             },
             error: function (jqXhr, textStatus, errorThrown) {
-                let life = getlife();
-                console.log('failed' + data);
-                $('.LifeCount').html('Lifes left:' + life);
-                updateImg(life);
+                console.log('failed');
             }
         });
-        
-        $(this).addClass('keyboardbtnDisable');
         
     });
 }
