@@ -23,35 +23,35 @@ public class Galgelogik extends UnicastRemoteObject implements IGalgelogik {
     private boolean spilletErTabt;
 
 
-    public ArrayList<String> getBrugteBogstaver() {
+    public synchronized ArrayList<String> getBrugteBogstaver() {
         return brugteBogstaver;
     }
 
-    public String getSynligtOrd() {
+    public synchronized String getSynligtOrd() {
         return synligtOrd;
     }
 
-    public String getOrdet() {
+    public synchronized String getOrdet() {
         return ordet;
     }
 
-    public int getAntalForkerteBogstaver() {
+    public synchronized int getAntalForkerteBogstaver() {
         return antalForkerteBogstaver;
     }
 
-    public boolean erSidsteBogstavKorrekt() {
+    public synchronized boolean erSidsteBogstavKorrekt() {
         return sidsteBogstavVarKorrekt;
     }
 
-    public boolean erSpilletVundet() {
+    public synchronized boolean erSpilletVundet() {
         return spilletErVundet;
     }
 
-    public boolean erSpilletTabt() {
+    public synchronized boolean erSpilletTabt() {
         return spilletErTabt;
     }
 
-    public boolean erSpilletSlut() {
+    public synchronized boolean erSpilletSlut() {
         return spilletErTabt || spilletErVundet;
     }
 
@@ -71,7 +71,7 @@ public class Galgelogik extends UnicastRemoteObject implements IGalgelogik {
         nulstil();
     }
 
-    public void nulstil() {
+    public synchronized void nulstil() {
         brugteBogstaver.clear();
         antalForkerteBogstaver = 0;
         spilletErVundet = false;
@@ -81,7 +81,7 @@ public class Galgelogik extends UnicastRemoteObject implements IGalgelogik {
     }
 
 
-    private void opdaterSynligtOrd() {
+    private synchronized void opdaterSynligtOrd() {
         synligtOrd = "";
         spilletErVundet = true;
         for (int n = 0; n < ordet.length(); n++) {
@@ -95,7 +95,7 @@ public class Galgelogik extends UnicastRemoteObject implements IGalgelogik {
         }
     }
 
-    public void gætBogstav(String bogstav) {
+    public synchronized void gætBogstav(String bogstav) {
         if (bogstav.length() != 1) return;
         System.out.println("Der gættes på bogstavet: " + bogstav);
         if (brugteBogstaver.contains(bogstav)) return;
@@ -119,7 +119,7 @@ public class Galgelogik extends UnicastRemoteObject implements IGalgelogik {
         try { Thread.sleep(200); } catch (InterruptedException ex) { } // undgå at der bliver gættæt ord for hurtigt.
     }
 
-    public void logStatus() {
+    public synchronized void logStatus() {
         System.out.println("---------- ");
         System.out.println("- ordet (skult) = " + ordet);
         System.out.println("- synligtOrd = " + synligtOrd);
@@ -131,7 +131,7 @@ public class Galgelogik extends UnicastRemoteObject implements IGalgelogik {
     }
 
 
-    public static String hentUrl(String url) throws IOException {
+    public synchronized static String hentUrl(String url) throws IOException {
         System.out.println("Henter Login.data fra " + url);
         BufferedReader br = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
         StringBuilder sb = new StringBuilder();
@@ -144,7 +144,7 @@ public class Galgelogik extends UnicastRemoteObject implements IGalgelogik {
     }
 
 
-    public void hentOrdFraDr(){
+    public synchronized void hentOrdFraDr(){
         String data = null;
         try {
             data = hentUrl("https://dr.dk");

@@ -2,15 +2,19 @@ package Controller;
 
 import Galgeleg.RMI.IGalgelogik;
 import SOAP.SOAPServer;
+import SaveScoreboardFile.SaveAndLoadScoreboard;
+import SaveScoreboardFile.SaveContainer;
 import brugerautorisation.Galgeleg.Galgelogik;
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;
 
 import javax.validation.constraints.Null;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class MainController {
@@ -19,7 +23,7 @@ public class MainController {
     private static MainController single_instance = null;
 
     private static ArrayList<Container> gamelist = new ArrayList<>();
-
+    private ArrayList<SaveContainer> scroelist = new ArrayList<>();
 
     static
     {
@@ -81,7 +85,27 @@ public class MainController {
 
     public boolean tjekWin(String userid) throws RemoteException {
         Container container =  findegame(userid);  // find gamelt spil
-        return container.getGalgelogik().erSpilletVundet();
+        boolean winBool = container.getGalgelogik().erSpilletVundet();
+
+        if(winBool) {
+            SaveContainer saveContainer = new SaveContainer();
+
+            saveContainer.setWord(container.getGalgelogik().getOrdet());
+            saveContainer.setUsedLetters(container.getGalgelogik().getBrugteBogstaver());
+            saveContainer.setUserid(container.getUserID());
+            saveContainer.setTimeStamp(new Timestamp(System.currentTimeMillis()));
+
+            scroelist.add(saveContainer);
+
+            SaveAndLoadScoreboard file = new SaveAndLoadScoreboard();
+            try {
+                file.save(scroelist);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return winBool;
     }
 
     public boolean deleteGame(String userid) throws RemoteException {
