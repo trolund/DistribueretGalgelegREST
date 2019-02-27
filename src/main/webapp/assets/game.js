@@ -8,8 +8,11 @@ $(document).ready(function () {
 
 
     $("#newGamebtn").click(function (){
-        newGame();
-        resetKeyboard();
+        destroyGame();   // slet det spil som spilles nu
+        newGame(); // lav et nyt spil.
+        resetKeyboard(); // update UI ->
+        updateWord();
+        getlife();
         $(".popup").hide(300);
     });
     $("#resumebtn").click(function (){
@@ -43,7 +46,7 @@ function destroyGame(){
         url: 'api/game/destroyGame' + "?userid=" + user.username,
         type: 'DELETE',
         contentType: 'plain/text',
-        async: true,
+        async: false,
         success: function (data, textStatus, jQxhr) {
 
 
@@ -180,7 +183,10 @@ function keyboard() {
         'w',
         'x',
         'y',
-        'z'
+        'z',
+        'æ',
+        'ø',
+        'å'
     ];
 
     // lav alle knapperne
@@ -221,7 +227,7 @@ function keyboard() {
     });
 }
 
-function updateKeyboard() {
+function updateKeyboard() {  // set de knapper med bugstaver som der er gættet på.
     $.ajax({
         url: 'api/game/usedLetters' + "?userid=" + user.username,
         type: 'GET',
@@ -233,7 +239,6 @@ function updateKeyboard() {
                 var counter = jsonData[i];
 
                 $.each($('.keyboardbtn'), function (){
-                    console.log($(this));
                     let key = $(this).attr('data');
 
                     if(counter === key){

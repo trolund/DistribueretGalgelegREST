@@ -1,6 +1,7 @@
 package SOAP;
 
 import Controller.MainController;
+import brugerautorisation.data.Bruger;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -8,8 +9,6 @@ import java.util.ArrayList;
 
 @WebService
 public interface ISOAPAdapter {
-
-    MainController controller = MainController.getInstance();
 
     @WebMethod ArrayList<String> getBrugteBogstaver(String userId);
 
@@ -34,5 +33,7 @@ public interface ISOAPAdapter {
     @WebMethod void logStatus(String userId);
 
     @WebMethod void hentOrdFraDr(String userId);
+
+    @WebMethod Bruger login(String userid, String password);
 
 }

@@ -59,6 +59,10 @@ h3 {
     height: 0px;
 }
 
+.visWord{
+    height: 1em;
+}
+
 /* STRUCTURE */
 
 .wrapper {
@@ -160,6 +164,7 @@ input[type=reset]:active {
 
 .keyboard {
     max-width: 450px;
+    margin-bottom: 15px;
 }
 
 button {
@@ -215,6 +220,16 @@ button:active {
     opacity: 0.8;
     filter: blur(0.8);
     background-color: gainsboro !important;
+}
+
+.keyboardbtnDisable:hover{
+    background-color: gainsboro !important;
+    -moz-transform: scale(1);
+    -webkit-transform: scale(1);
+    -o-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+    cursor: not-allowed;
 }
 
 input[type=text] {

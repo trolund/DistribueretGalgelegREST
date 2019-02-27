@@ -1,8 +1,14 @@
 package SOAP;
 
 import Controller.MainController;
+import brugerautorisation.data.Bruger;
+import brugerautorisation.transport.rmi.Brugeradmin;
 
 import javax.jws.WebService;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 @WebService(endpointInterface = "SOAP.ISOAPAdapter")
@@ -57,6 +63,29 @@ public class SOAPAdapter implements ISOAPAdapter {
 
     public void hentOrdFraDr(String userId){
         controller.findegame(userId).getGalgelogik().hentOrdFraDr();
+    }
+
+    public Bruger login(String userid, String password){
+        System.out.println(userid + " forsøger at logge ind via SOAP.....");
+        Brugeradmin ba = null;
+        try {
+            ba = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        Bruger bruger = null;
+        try {
+            bruger = ba.hentBruger(userid, password);
+            System.out.println("bruger: " + userid + " lige logget ind, via SOAP.");
+            return bruger;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

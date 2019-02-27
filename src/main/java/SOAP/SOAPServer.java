@@ -15,7 +15,7 @@ public class SOAPServer {
         // soap Setup
 
         //Ipv6-addressen [::] svarer til Ipv4-adressen 0.0.0.0, der matcher alle maskinens netkort og IP-adresser
-        Endpoint.publish("http://[::]:9922/SOAPService", adapter);
+        Endpoint.publish("http://[::]:1791/SOAPService", adapter);
         System.out.println("SOAP setup done.");
     }
 }
