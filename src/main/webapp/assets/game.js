@@ -17,6 +17,7 @@ $(document).ready(function () {
     });
 
     updateWord();
+    updateKeyboard();
 });
 
 function newGame(){
@@ -217,6 +218,33 @@ function keyboard() {
             }
         });
         
+    });
+}
+
+function updateKeyboard() {
+    $.ajax({
+        url: 'api/game/usedLetters' + "?userid=" + user.username,
+        type: 'GET',
+        contentType: 'application/json',
+        async: false,
+        success: function (data, textStatus, jQxhr) {
+            var jsonData = data.toString().split(",");
+            for (var i = 0; i < jsonData.length; i++) {
+                var counter = jsonData[i];
+
+                $.each($('.keyboardbtn'), function (){
+                    console.log($(this));
+                    let key = $(this).attr('data');
+
+                    if(counter === key){
+                        $(this).addClass('keyboardbtnDisable');
+                    }
+                })
+            }
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+            console.log('failed' + data);
+        }
     });
 }
 

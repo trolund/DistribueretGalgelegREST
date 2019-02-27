@@ -105,6 +105,11 @@ public class MainController {
         return null;
     }
 
+    public ArrayList<String> usedChar(String userid){
+        Container container = findegame(userid);
+        return container.getGalgelogik().getBrugteBogstaver();
+    }
+
     public boolean gess(String c, String userid) throws RemoteException {
         Container game = findegame(userid);
         game.getGalgelogik().gætBogstav(c);

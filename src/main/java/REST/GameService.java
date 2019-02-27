@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.ws.Endpoint;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 @Path("/game")
 public class GameService {
@@ -126,6 +127,13 @@ public class GameService {
             return true;
         }
 
+    }
+
+    @GET
+    @Path("/usedLetters")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response usedLetters(@QueryParam("userid") String userid)  {
+        return Response.status(200).entity(controller.usedChar(userid)).build();
     }
 
 }
