@@ -7,9 +7,11 @@ import SaveScoreboardFile.SaveContainer;
 import brugerautorisation.Galgeleg.Galgelogik;
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;
+import com.google.gson.Gson;
 
 import javax.validation.constraints.Null;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -23,7 +25,7 @@ public class MainController {
     private static MainController single_instance = null;
 
     private static ArrayList<Container> gamelist = new ArrayList<>();
-    private ArrayList<SaveContainer> scroelist = new ArrayList<>();
+   // private ArrayList<SaveContainer> scroelist = new ArrayList<>();
 
     static
     {
@@ -44,20 +46,7 @@ public class MainController {
 
         return single_instance;
     }
-/*
-    private IGalgelogik galgelogik;
 
-    {
-        try {
-            galgelogik = new Galgelogik();
-            galgelogik.hentOrdFraDr();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-*/
     public boolean newGame(String userid){
         Container container =  findegame(userid);
 
@@ -76,6 +65,13 @@ public class MainController {
         return false;  // resume game
     }
 
+    public String getScoreboardAsJson() throws IOException {
+        SaveAndLoadScoreboard file = new SaveAndLoadScoreboard();
+        Gson gson = new Gson();
+        ArrayList<SaveContainer> list = file.loadList();
+        return gson.toJson(list);
+    }
+
     public void forceNewGame(String userid) throws RemoteException {
         Container container =  findegame(userid);  // find gamelt spil
         gamelist.remove(container);  // selt det gamle spil.
@@ -89,18 +85,18 @@ public class MainController {
 
         if(winBool) {
             SaveContainer saveContainer = new SaveContainer();
+            SaveAndLoadScoreboard file = new SaveAndLoadScoreboard();
 
             saveContainer.setWord(container.getGalgelogik().getOrdet());
             saveContainer.setUsedLetters(container.getGalgelogik().getBrugteBogstaver());
             saveContainer.setUserid(container.getUserID());
             saveContainer.setTimeStamp(new Timestamp(System.currentTimeMillis()));
 
-            scroelist.add(saveContainer);
-
-            SaveAndLoadScoreboard file = new SaveAndLoadScoreboard();
             try {
-                file.save(scroelist);
+                file.saveEntriy(saveContainer);
             } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

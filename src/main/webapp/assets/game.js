@@ -1,6 +1,7 @@
 $(document).ready(function () {
     keyboard();
     $('.popup').hide();
+    $('.list').hide();
     newGame();
     console.log("Game ready!");
     $("#playerinfo").html("<p>" + user.username + "</p>");
@@ -17,6 +18,11 @@ $(document).ready(function () {
     });
     $("#resumebtn").click(function (){
         $(".popup").hide(300);
+    });
+
+    $('#listbtn').click(function (){
+        buildList();
+        $('.list').show();
     });
 
     updateWord();
@@ -255,4 +261,26 @@ function updateKeyboard() {  // set de knapper med bugstaver som der er gættet 
 
 function resetKeyboard() {
     $(".keyboardbtn").removeClass("keyboardbtnDisable");
+}
+
+
+function buildList() {
+    $.ajax({
+        url: 'api/game/getScoreboard',
+        type: 'GET',
+        contentType: 'application/json',
+        async: false,
+        success: function (data, textStatus, jQxhr) {
+
+            $('.scrollDiv').empty();
+            $('.scrollDiv').append("<div class='row'><span class='userid'>Studie nr</span><span>Ordet</span><span>antal bugstaverbrugt</span><span>tidspunkt</span></div>");
+            data.forEach(function (item) {
+                $('.scrollDiv').append("<div class='row'><span class='userid'>" + item.userid+ "</span><span>" + item.word + "</span><span>" + item.usedLetters.length + "</span><span>" + item.timeStamp + "</span></div>");
+            });
+
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+            console.log('failed' + data);
+        }
+    });
 }

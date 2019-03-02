@@ -10,6 +10,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.ws.Endpoint;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -134,6 +135,18 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response usedLetters(@QueryParam("userid") String userid)  {
         return Response.status(200).entity(controller.usedChar(userid)).build();
+    }
+
+    @GET
+    @Path("/getScoreboard")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getScoreboardAsJson()  {
+        try {
+            return controller.getScoreboardAsJson();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

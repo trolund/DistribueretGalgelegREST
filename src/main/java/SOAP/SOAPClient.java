@@ -17,7 +17,8 @@ public class SOAPClient {
 
         URL url = null;
         try {
-            url = new URL("http://localhost:1791/SOAPService?wsdl");
+           // url = new URL("http://localhost:1791/SOAPService?wsdl");
+            url = new URL("https://distgalgeleg.herokuapp.com:1791/SOAPService?wsdl");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
