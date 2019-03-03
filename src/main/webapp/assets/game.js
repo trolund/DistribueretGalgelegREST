@@ -22,7 +22,11 @@ $(document).ready(function () {
 
     $('#listbtn').click(function (){
         buildList();
-        $('.list').show();
+        $('.list').show(300);
+    });
+
+    $('.closebtn').click(function () {
+        $('.list').hide(300);
     });
 
     updateWord();
@@ -275,9 +279,10 @@ function buildList() {
             $('.scrollDiv').empty();
             $('.scrollDiv').append("<div class='row'><span class='userid'>Studie nr</span><span>Ordet</span><span>antal bugstaverbrugt</span><span>tidspunkt</span></div>");
             data.forEach(function (item) {
-                $('.scrollDiv').append("<div class='row'><span class='userid'>" + item.userid+ "</span><span>" + item.word + "</span><span>" + item.usedLetters.length + "</span><span>" + item.timeStamp + "</span></div>");
+                $('.scrollDiv').append("<div class='row'><span class='userid'>" + item.userid+ "</span><span>" + item.word + "</span><span data-toggle='tooltip' data-placement='top' title=" + item.usedLetters + ">" + item.usedLetters.length + "</span><span>" + item.timeStamp + "</span></div>");
             });
 
+            $('[data-toggle="tooltip"]').tooltip();
         },
         error: function (jqXhr, textStatus, errorThrown) {
             console.log('failed' + data);

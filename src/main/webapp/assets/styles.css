@@ -41,7 +41,6 @@ h3 {
     -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
     box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
     text-align: center;
-     position: absolute;
     left: 50%;
     margin-left: -125px;
     top: 50%;
@@ -51,6 +50,47 @@ h3 {
 
 .popup button{
     margin: 10px;
+}
+
+.list{
+    position: fixed;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    border-radius: 10px 10px 10px 10px;
+    background: #fff;
+    width: 90%;
+    max-width: 800px;
+    max-height: 80%;
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+    text-align: center;
+    z-index:1;
+    margin: 5% auto; /* Will not center vertically and won't work in IE6/7. */
+    left: 0;
+    right: 0;
+    top: 10%;
+    overflow: hidden;
+}
+
+.closebtn{
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    z-index: 2;
+}
+
+.closebtn:hover{
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
 }
 
 .small {
@@ -430,7 +470,7 @@ input[type=password]::placeholder {
 
 .img {
     padding: 20px;
-    width: 70%;
+    width: 55%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -459,19 +499,22 @@ input[type=password]::placeholder {
 .scrollDiv{
     overflow:scroll; 
     width: 100%;
-    height: 100%;
+    height: 600px;
 }
 
 .row{
     width: 100%;
-    
+    margin: 0px !important;
+    margin-top: 15px;
     height: 40px;
     vertical-align: middle;
     padding: 10px;
 }
 
 .row:first-child {
-    background-color: antiquewhite;
+    background-color: #AAAAAA !important;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
 .row span{
@@ -480,16 +523,20 @@ input[type=password]::placeholder {
 }
 
 .row span:nth-child(1){
-   width: 15%;
+   width: 10%;
 }
 .row span:nth-child(2){
    width: 35%;
 }
 
 .row span:nth-child(3){
-   width: 30%;
+   width: 25%;
 }
 
 .row span:nth-child(4){
-   width: 20%;
+   width: 30%;
+}
+
+.row:nth-child(odd){
+    background-color: #F9F9F9;
 }

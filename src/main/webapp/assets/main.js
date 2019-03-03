@@ -1,37 +1,41 @@
 var user;
 
 $(document).ready(function () {
+    $("#loginbtn").click(function () {
+        let json = toJSONString($('#LoginForm'));
+        user = JSON.parse(json);
+        console.log(user);
+        $.ajax({
+            url: 'api/login',
+            type: 'POST',
+            contentType: 'application/json',
+            data: json,
+            success: function (data, textStatus, jQxhr) {
+                $('.msg').html(textStatus);
+                $('.msg').css('color', 'green');
+                if (textStatus == 'success') {
+                    goToAPP();
+                }
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
+                $('.msg').html(textStatus);
+                $('.msg').css('color', 'red');
+            }
+        });
+        }
+    );
 
+/*
     $('#LoginForm input').on('keypress', function(e) {
-        if(e.which === 13){
+        if(e.which == 13){
             loginuser();
         }
     });
-
-    $("#loginbtn").click(loginuser());
+    */
 });
 
 function loginuser() {
-    let json = toJSONString($('#LoginForm'));
-    user = JSON.parse(json);
-    console.log(user);
-    $.ajax({
-        url: 'api/login',
-        type: 'POST',
-        contentType: 'application/json',
-        data: json,
-        success: function (data, textStatus, jQxhr) {
-            $('.msg').html(textStatus);
-            $('.msg').css('color', 'green');
-            if (textStatus == 'success') {
-                goToAPP();
-            }
-        },
-        error: function (jqXhr, textStatus, errorThrown) {
-            $('.msg').html(textStatus);
-            $('.msg').css('color', 'red');
-        }
-    });
+   console.log("hey");
 }
 
 function goToAPP() {
