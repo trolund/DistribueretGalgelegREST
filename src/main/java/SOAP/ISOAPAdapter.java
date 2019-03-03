@@ -1,6 +1,5 @@
 package SOAP;
 
-import Controller.MainController;
 import brugerautorisation.data.Bruger;
 
 import javax.jws.WebMethod;
@@ -35,5 +34,8 @@ public interface ISOAPAdapter {
     @WebMethod void hentOrdFraDr(String userId);
 
     @WebMethod Bruger login(String userid, String password);
+
+    @WebMethod
+    boolean findGame(String userid);
 
 }

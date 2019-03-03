@@ -108,14 +108,14 @@ public class GameService {
     @DELETE
     @Path("/destroyGame")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response destroyGame(@QueryParam("userid") String userid)  {
+    public String destroyGame(@QueryParam("userid") String userid)  {
         try {
             controller.deleteGame(userid);
-            return Response.status(200).build();
+            return "virker";
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return Response.status(204).build();
+        return "fail";
     }
 
     @GET

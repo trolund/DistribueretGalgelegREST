@@ -17,8 +17,8 @@ public class SOAPClient {
 
         URL url = null;
         try {
-           // url = new URL("http://localhost:1791/SOAPService?wsdl");
-            url = new URL("https://distgalgeleg.herokuapp.com:1791/SOAPService?wsdl");
+            url = new URL("http://localhost:1791/SOAPService?wsdl");
+           // url = new URL("https://distgalgeleg.herokuapp.com:1791/SOAPService?wsdl");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -41,7 +41,9 @@ public class SOAPClient {
 
             } while (bruger == null);
 
-            logik.hentOrdFraDr(bruger.brugernavn);
+            if(!logik.findGame(bruger.brugernavn)) { // opret et spil hvis der ikke findes et i forvejen.
+                logik.hentOrdFraDr(bruger.brugernavn);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

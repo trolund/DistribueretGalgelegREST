@@ -58,8 +58,7 @@ function destroyGame(){
         contentType: 'plain/text',
         async: false,
         success: function (data, textStatus, jQxhr) {
-
-
+            console.log(data);
         },
         error: function (jqXhr, textStatus, errorThrown) {
             console.log("fail...");
@@ -266,7 +265,6 @@ function updateKeyboard() {  // set de knapper med bugstaver som der er gættet 
 function resetKeyboard() {
     $(".keyboardbtn").removeClass("keyboardbtnDisable");
 }
-
 
 function buildList() {
     $.ajax({

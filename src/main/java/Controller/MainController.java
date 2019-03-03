@@ -108,10 +108,9 @@ public class MainController {
         Container container =  findegame(userid);  // find gamelt spil
         if(container != null) {
             gamelist.remove(container);  // selt det gamle spil.
-            logStatus(userid);
+            //logStatus(userid);
             return true;
         }
-        logStatus(userid);
         return false;
     }
 
@@ -138,7 +137,7 @@ public class MainController {
     }
 
     private void logStatus(String userid) {
-        Galgelogik galgelogik= findegame(userid).getGalgelogik();
+        Galgelogik galgelogik = findegame(userid).getGalgelogik();
         System.out.println("Number of games: " + gamelist.size());
         System.out.println("---------- ");
         System.out.println("- synligtOrd = " + galgelogik.getSynligtOrd());

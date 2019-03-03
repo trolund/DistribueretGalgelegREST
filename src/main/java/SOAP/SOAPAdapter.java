@@ -1,5 +1,6 @@
 package SOAP;
 
+import Controller.Container;
 import Controller.MainController;
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;
@@ -88,5 +89,12 @@ public class SOAPAdapter implements ISOAPAdapter {
         return null;
     }
 
-
+    public boolean findGame(String userid){
+        Container container = controller.findegame(userid);
+        if(container != null){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }
