@@ -97,4 +97,19 @@ public class SOAPAdapter implements ISOAPAdapter {
             return false;
         }
     }
+
+    @Override
+    public boolean newGame(String userid) {
+        return controller.newGame(userid);
+    }
+
+    @Override
+    public boolean tjekWin(String userid) throws RemoteException {
+        return controller.tjekWin(userid);
+    }
+
+    @Override
+    public boolean destroyGame(String userid) throws RemoteException {
+        return controller.deleteGame(userid);
+    }
 }

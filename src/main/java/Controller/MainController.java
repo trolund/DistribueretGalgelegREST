@@ -152,24 +152,19 @@ public class MainController {
     }
 
     // RMI til jakobs server.
-    public boolean login(String brugernavn, String adgangskode) {
+    public boolean login(String brugernavn, String adgangskode) throws RemoteException, NotBoundException, MalformedURLException {
         Brugeradmin ba = null;
 
         System.out.println("Forsøger at logge ind.....");
         Bruger bruger = null;
-        try {
             ba = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
             bruger = ba.hentBruger(brugernavn, adgangskode);
-            System.out.println("velkommen, " + bruger.brugernavn);
-            return true;
-        } catch (NotBoundException e1) {
-            e1.printStackTrace();
-        } catch (MalformedURLException e1) {
-            e1.printStackTrace();
-        } catch (RemoteException e1) {
-            e1.printStackTrace();
-        }
-        return false;
+            if(bruger != null) {
+                System.out.println("velkommen, " + bruger.brugernavn);
+                return true;
+            }else {
+                return false;
+            }
     }
 
     public String getVisabelWord(String userid) throws RemoteException {

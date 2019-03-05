@@ -2,40 +2,50 @@ var user;
 
 $(document).ready(function () {
     $("#loginbtn").click(function () {
-        let json = toJSONString($('#LoginForm'));
-        user = JSON.parse(json);
-        console.log(user);
-        $.ajax({
-            url: 'api/login',
-            type: 'POST',
-            contentType: 'application/json',
-            data: json,
-            success: function (data, textStatus, jQxhr) {
-                $('.msg').html(textStatus);
-                $('.msg').css('color', 'green');
-                if (textStatus == 'success') {
-                    goToAPP();
-                }
-            },
-            error: function (jqXhr, textStatus, errorThrown) {
-                $('.msg').html(textStatus);
-                $('.msg').css('color', 'red');
-            }
-        });
-        }
-    );
+        tjekform();
+    });
 
-/*
-    $('#LoginForm input').on('keypress', function(e) {
-        if(e.which == 13){
-            loginuser();
+    $('#LoginForm input').on('keypress', function (e) {
+        if (e.which == 13) {
+            tjekform();
         }
     });
-    */
+
 });
 
+function tjekform() {
+    console.log( $('#username').empty());
+    if ($('#password').val() == "" || $('#username').val() == "") {
+        $('.msg').css('color', 'red');
+        $('.msg').html('Du skal angive et brugernavn og et password.');
+    } else {
+        loginuser();
+    }
+}
+
 function loginuser() {
-   console.log("hey");
+    let json = toJSONString($('#LoginForm'));
+    user = JSON.parse(json);
+    console.log(user);
+    $.ajax({
+        url: 'api/login',
+        type: 'POST',
+        contentType: 'application/json',
+        data: json,
+        success: function (data, textStatus, jQxhr) {
+            $('.msg').html(textStatus);
+            $('.msg').css('color', 'green');
+            console.log(data);
+            if (textStatus == 'success') {
+                goToAPP();
+            }
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+            $('.msg').html("studie nr eller kode forkert.");
+            console.log(jqXhr.status);
+            $('.msg').css('color', 'red');
+        }
+    });
 }
 
 function goToAPP() {
@@ -44,10 +54,10 @@ function goToAPP() {
     });
 }
 
-function getGameScipts(){
+function getGameScipts() {
     $.getScript("assets/game.js", function (data, textStatus, jqxhr) {
-            console.log("Load was performed.");
-        });
+        console.log("Load was performed.");
+    });
 }
 
 function toJSONString(form) {

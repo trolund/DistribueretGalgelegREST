@@ -1,11 +1,11 @@
 package SOAP;
 
-import brugerautorisation.Galgeleg.Galgelogik;
 import brugerautorisation.data.Bruger;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class SOAPClient {
@@ -42,6 +42,7 @@ public class SOAPClient {
             } while (bruger == null);
 
             if(!logik.findGame(bruger.brugernavn)) { // opret et spil hvis der ikke findes et i forvejen.
+                logik.newGame(bruger.brugernavn);
                 logik.hentOrdFraDr(bruger.brugernavn);
             }
         } catch (Exception e) {
@@ -73,6 +74,15 @@ public class SOAPClient {
             }
             logStatus(logik);
         }
+
+        try {
+            logik.tjekWin(bruger.brugernavn);
+            logik.destroyGame(bruger.brugernavn);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+
         System.out.println("EXIT");
     }
 

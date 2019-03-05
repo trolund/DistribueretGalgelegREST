@@ -67,7 +67,7 @@ h3 {
     margin: 5% auto; /* Will not center vertically and won't work in IE6/7. */
     left: 0;
     right: 0;
-    top: 10%;
+    top: 5%;
     overflow: hidden;
 }
 

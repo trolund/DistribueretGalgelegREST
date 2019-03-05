@@ -14,6 +14,14 @@ public class test {
     public static void main(String[] args) {
         MainController controller = MainController.getInstance();
 
-        controller.login("s161791", "kode123");
+        try {
+            controller.login("s161791", "kode123");
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 }

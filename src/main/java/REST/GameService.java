@@ -19,7 +19,6 @@ public class GameService {
 
     private MainController controller = MainController.getInstance();
 
-
     @GET
     public String getDiscription(){
         return "<p>Du bliver nød til at specificere hvilke resurse du ønsker. \n" +
