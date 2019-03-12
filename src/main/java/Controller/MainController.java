@@ -18,13 +18,16 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainController {
 
     // static variable single_instance of type Singleton
     private static MainController single_instance = null;
 
-    private static ArrayList<Container> gamelist = new ArrayList<>();
+    private static Map<String, Galgelogik> gamelist = new HashMap<>();
    // private ArrayList<SaveContainer> scroelist = new ArrayList<>();
 
     static
@@ -54,7 +57,8 @@ public class MainController {
             try {
                 brugerautorisation.Galgeleg.Galgelogik logik = new brugerautorisation.Galgeleg.Galgelogik();
                 logik.hentOrdFraDr();
-                gamelist.add(new Container(userid, logik));
+               // gamelist.add(new Container(userid, logik));
+                gamelist.put(userid, logik);
                 logStatus(userid);
                 return true; // new game statet.
             } catch (RemoteException e) {
@@ -75,7 +79,8 @@ public class MainController {
     public void forceNewGame(String userid) throws RemoteException {
         Container container =  findegame(userid);  // find gamelt spil
         gamelist.remove(container);  // selt det gamle spil.
-        gamelist.add(new Container(userid, new Galgelogik())); // opret nyt spil.
+       // gamelist.add(new Container(userid, new Galgelogik())); // opret nyt spil.
+        gamelist.put(userid, new Galgelogik());
         logStatus(userid);
     }
 
@@ -105,6 +110,7 @@ public class MainController {
     }
 
     public boolean deleteGame(String userid) throws RemoteException {
+        /*
         Container container =  findegame(userid);  // find gamelt spil
         if(container != null) {
             gamelist.remove(container);  // selt det gamle spil.
@@ -112,16 +118,25 @@ public class MainController {
             return true;
         }
         return false;
+        */
+        gamelist.remove(userid);
+        return true;
     }
 
     public Container findegame(String userid){  // findes der et spil som er igang?
         //System.out.println(gamelist);
+        /*
         for (Container item:  gamelist) {
             if (item.getUserID().equals(userid)){
                 return item;
             }
         }
-        return null;
+        */
+        Galgelogik logik = gamelist.get(userid);
+        if(logik == null)
+            return null;
+        else
+            return new Container(userid, logik);
     }
 
     public ArrayList<String> usedChar(String userid){

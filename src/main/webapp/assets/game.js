@@ -198,6 +198,8 @@ function keyboard() {
         'å'
     ];
 
+    $('.keyboard').empty();
+
     // lav alle knapperne
     $.each(abc, function (index, value) {
         $('.keyboard').append("<span><button class='keyboardbtn' data=" + value + ">" + value + "</button></span>");
