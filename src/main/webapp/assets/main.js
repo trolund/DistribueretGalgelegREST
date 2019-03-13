@@ -14,7 +14,7 @@ $(document).ready(function () {
 });
 
 function tjekform() {
-    console.log( $('#username').empty());
+   // console.log( $('#username').empty());
     if ($('#password').val() == "" || $('#username').val() == "") {
         $('.msg').css('color', 'red');
         $('.msg').html('Du skal angive et brugernavn og et password.');
@@ -56,7 +56,7 @@ function goToAPP() {
 
 function getGameScipts() {
     $.getScript("assets/game.js", function (data, textStatus, jqxhr) {
-        console.log("Load was performed.");
+        console.log("spil-logik loaded. status: " + textStatus);
     });
 }
 

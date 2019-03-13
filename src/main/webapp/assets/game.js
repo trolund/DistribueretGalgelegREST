@@ -1,9 +1,13 @@
+var word;
+var win = false;
+
 $(document).ready(function () {
+
     keyboard();
     $('.popup').hide();
     $('.list').hide();
     newGame();
-    console.log("Game ready!");
+
     $("#playerinfo").html("<p>" + user.username + "</p>");
     GameOver(getlife());
 
@@ -31,7 +35,52 @@ $(document).ready(function () {
 
     updateWord();
     updateKeyboard();
+
+    console.log("Spillet er Loaded og klar! :)");
+    // update per 5sek if checkbox i checked
+        setInterval(function () {
+            if(JSON.parse($('#pollingCheck').prop('checked'))) {
+                $.ajax({
+                    url: 'api/game/gameExist' + "?userid=" + user.username,
+                    type: 'GET',
+                    contentType: 'plain/text',
+                    success: function (data, textStatus, jQxhr) {
+                        if (JSON.parse(data)) {
+                            updateWord();
+                            updateKeyboard();
+                        }
+                        /*
+                        else {
+                                if(win) {
+                                    $('.popupLabel').html('Det ser ud til at dit spil ikke findes mere? tjek loggen for at se om du har vundet spillet.');
+                                    $(".popup").show(300);
+                                }
+                            }
+                            */
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log("fail...");
+                        $(".popup").show(300);
+                    }
+                });
+            }
+        }, 5000);
 });
+
+function getword() {
+    $.ajax({
+        url: 'api/game/word' + "?userid=" + user.username,
+        type: 'GET',
+        contentType: 'plain/text',
+        success: function (data, textStatus, jQxhr) {
+            word = data;
+            console.log("Ordet er: " + word);
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+            word = "Det fik jeg ikke fat i?";
+        }
+    });
+}
 
 function newGame(){
      $.ajax({
@@ -41,11 +90,13 @@ function newGame(){
         async: false,
         success: function (data, textStatus, jQxhr) {
             getlife();
+            getword();
             updateWord();
+            win = false;
             $(".gamelabel").html("");
         },
         error: function (jqXhr, textStatus, errorThrown) {
-            console.log("fail...");
+            console.log("fejl...");
             newGame();
         }
     }); 
@@ -77,7 +128,7 @@ function updateWord() {
 
             $('.visWord').html(word);
 
-            if(!word.includes('*')){
+            if(!word.includes('*') && win != true){
                 tjekWin();
             }else {
                 getlife();
@@ -96,27 +147,27 @@ function tjekWin() {
         contentType: 'plain/text',
         success: function (data, textStatus, jQxhr) {
             if(JSON.parse(data)){
-                $(".popupLabel").html("You Win!");
+                $(".popupLabel").html("Du vandt spillet!");
                 $("#resumebtn").hide();
                 $('.popup').show(300);
-                console.log("win!");
+                console.log("Spillet er Vundet! med ord: " + word);
+                win = JSON.parse(data);
             }
         },
         error: function (jqXhr, textStatus, errorThrown) {
-            $('.visWord').text("fail...");
+            $('.visWord').text("fejl...");
         }
     });
 }
 
 function getlife() {
-    // api/game/getAntalForkerteBogstaver
     $.ajax({
         url: 'api/game/getAntalForkerteBogstaver' + "?userid=" + user.username,
         type: 'GET',
         contentType: 'plain/text',
         async: false,
         success: function (data, textStatus, jQxhr) {
-            $('.LifeCount').html('<p>Lifes left: ' + (7-parseInt(data)) + '</p>');
+            $('.LifeCount').html('<p>Liv tilbage: <b>' + (7-parseInt(data)) + '</b></p>');
             updateImg(parseInt(data));
             GameOver(data);
         },
@@ -127,7 +178,6 @@ function getlife() {
 }
 
 function updateImg(life) {
-    console.log(life);
     switch (life) {
         case 0:
             $(".img").attr("src", "assets/img/00.png");
@@ -155,14 +205,13 @@ function updateImg(life) {
 
 function GameOver(life){
     if((7-life) <= 0){
-        destroyGame();
+        //destroyGame();
     $(".gamelabel").css("color", "red");
-    $(".gamelabel").html("The game is over!");
-    $(".popupLabel").html("Game over!");
+    $(".gamelabel").html(word);
+    $(".popupLabel").html("spillet er tabt, ordet var: " + word);
     $("#resumebtn").hide();
     $('.popup').show(300);
     }
-
 }
 
 function keyboard() {
@@ -203,6 +252,8 @@ function keyboard() {
     // lav alle knapperne
     $.each(abc, function (index, value) {
         $('.keyboard').append("<span><button class='keyboardbtn' data=" + value + ">" + value + "</button></span>");
+
+
     });
 
     // set én clicklisner på dem alle.
@@ -210,7 +261,7 @@ function keyboard() {
     $('.keyboardbtn').click(function () {
         let gess = $(this).attr('data');
         var thisbtn = $(this);
-        console.log('gess: ' + gess);
+        console.log('Gæt på bogstavet: ' + gess);
 
         $.ajax({
             url: 'api/game/geatbogstav?letter=' + gess + "&userid=" + user.username,
@@ -220,11 +271,11 @@ function keyboard() {
 
                 if (JSON.parse(data)) {  // det er ikke kønt men js opfatter det
                     $(".gamelabel").css("color", "green");
-                    $(".gamelabel").html("Correct! " + gess +  " is in the word!");
+                    $(".gamelabel").html("Rigtigt! " + gess +  " er i ordet.");
                 } else {
                     getlife();
                     $(".gamelabel").css("color", "red");
-                    $(".gamelabel").html("Nope! " + gess + " is not in the word.");
+                    $(".gamelabel").html("Nope! " + gess + " er ikke i ordet.");
                 }
 
                 updateWord();
@@ -236,7 +287,20 @@ function keyboard() {
         });
         
     });
+
+    // set keypreses
+    $(document).keypress(function(e){
+        $.each(abc, function (item) {
+            if (e.which == item.charCode) {
+                var element = $(".keyboardbtn").find("[data='" + item + "']");
+                if (element != null) {
+                    element.click();
+                }
+            }
+        })
+    });
 }
+
 
 function updateKeyboard() {  // set de knapper med bugstaver som der er gættet på.
     $.ajax({

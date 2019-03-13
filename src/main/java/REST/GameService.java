@@ -106,15 +106,16 @@ public class GameService {
 
     @DELETE
     @Path("/destroyGame")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public String destroyGame(@QueryParam("userid") String userid)  {
         try {
             controller.deleteGame(userid);
-            return "virker";
+            System.out.println("spil ");
+            return "spillet er blevet slettet.";
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return "fail";
+        return "spillet er blev IKKE slettet.";
     }
 
     @GET
@@ -146,6 +147,20 @@ public class GameService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @GET
+    @Path("/gameExist")
+    @Produces(MediaType.APPLICATION_JSON)
+    public boolean gameExist(@QueryParam("userid") String userid)  {
+        return controller.gameExist(userid);
+    }
+
+    @GET
+    @Path("/word")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String word(@QueryParam("userid") String userid)  {
+        return controller.word(userid);
     }
 
 }

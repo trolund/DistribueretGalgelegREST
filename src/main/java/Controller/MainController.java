@@ -191,19 +191,20 @@ public class MainController {
         Container game = findegame(userid);
         return game.getGalgelogik().getAntalForkerteBogstaver();
     }
-/*
-    public static void logStatus(Galgelogik logik) throws RemoteException {
-        System.out.println("---------- ");
-        System.out.println("- synligtOrd = " + logik.getSynligtOrd());
-        System.out.println("- brugeBogstaver = " + logik.getBrugteBogstaver());
-        int antalLiv = 7-logik.getAntalForkerteBogstaver();
-        System.out.println("Liv tilbage: " + antalLiv);
-        if (logik.erSpilletTabt()) System.out.println("- SPILLET ER TABT");
-        if (logik.erSpilletVundet()) System.out.println("- SPILLET ER VUNDET");
-        asciiHangman(antalLiv);
-        System.out.println("---------- ");
+
+    public boolean gameExist(String userid){
+        Container container = findegame(userid);
+        if(container != null){
+            return  true;
+        }else {
+            return false;
+        }
     }
-*/
+
+    public String word(String userid){
+        return findegame(userid).getGalgelogik().getOrdet();
+    }
+
     private static void asciiHangman(int life){
         String art ="";
         switch (life){
@@ -301,7 +302,5 @@ public class MainController {
         System.out.println(art);
 
     }
-
-
 
 }
