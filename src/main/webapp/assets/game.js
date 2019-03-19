@@ -5,6 +5,7 @@ $(document).ready(function () {
 
     keyboard();
     $('.popup').hide();
+    $('.winImg').hide();
     $('.list').hide();
     newGame();
 
@@ -19,6 +20,7 @@ $(document).ready(function () {
         updateWord();
         getlife();
         $(".popup").hide(300);
+        $('.winImg').hide(300);
     });
     $("#resumebtn").click(function (){
         $(".popup").hide(300);
@@ -149,6 +151,7 @@ function tjekWin() {
             if(JSON.parse(data)){
                 $(".popupLabel").html("Du vandt spillet!");
                 $("#resumebtn").hide();
+                $('.winImg').show(500);
                 $('.popup').show(300);
                 console.log("Spillet er Vundet! med ord: " + word);
                 win = JSON.parse(data);
