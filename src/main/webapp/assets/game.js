@@ -41,7 +41,7 @@ $(document).ready(function () {
     console.log("Spillet er Loaded og klar! :)");
     // update per 5sek if checkbox i checked
         setInterval(function () {
-            if(JSON.parse($('#pollingCheck').prop('checked'))) {
+            if(JSON.parse($('#pollingCheck').prop('checked')) && !win) {
                 $.ajax({
                     url: 'api/game/gameExist' + "?userid=" + user.username,
                     type: 'GET',
