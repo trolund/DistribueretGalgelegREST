@@ -21,6 +21,7 @@ public class Galgelogik extends UnicastRemoteObject implements IGalgelogik {
     private boolean sidsteBogstavVarKorrekt;
     private boolean spilletErVundet;
     private boolean spilletErTabt;
+    private boolean aktiv = true;
 
 
     public synchronized ArrayList<String> getBrugteBogstaver() {
@@ -55,6 +56,13 @@ public class Galgelogik extends UnicastRemoteObject implements IGalgelogik {
         return spilletErTabt || spilletErVundet;
     }
 
+    public boolean isAktiv() {
+        return aktiv;
+    }
+
+    public void setAktiv(boolean aktiv) {
+        this.aktiv = aktiv;
+    }
 
     public Galgelogik() throws java.rmi.RemoteException {
         muligeOrd.add("bil");

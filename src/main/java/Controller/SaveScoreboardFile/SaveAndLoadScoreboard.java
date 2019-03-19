@@ -1,11 +1,7 @@
-package SaveScoreboardFile;
+package Controller.SaveScoreboardFile;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.stream.Stream;
 
 import com.google.gson.Gson;
 

@@ -1,15 +1,13 @@
 package Controller;
 
-import Galgeleg.RMI.IGalgelogik;
 import SOAP.SOAPServer;
-import SaveScoreboardFile.SaveAndLoadScoreboard;
-import SaveScoreboardFile.SaveContainer;
+import Controller.SaveScoreboardFile.SaveAndLoadScoreboard;
+import Controller.SaveScoreboardFile.SaveContainer;
 import brugerautorisation.Galgeleg.Galgelogik;
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;
 import com.google.gson.Gson;
 
-import javax.validation.constraints.Null;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,7 +17,6 @@ import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainController {
@@ -30,7 +27,7 @@ public class MainController {
     private static Map<String, Galgelogik> gamelist = new HashMap<>();
    // private ArrayList<SaveContainer> scroelist = new ArrayList<>();
 
-    static
+    static  // start SOAP server.
     {
         SOAPServer soapServer = new SOAPServer();
         soapServer.startSOAP();
@@ -51,9 +48,13 @@ public class MainController {
     }
 
     public boolean newGame(String userid){
+
         Container container =  findegame(userid);
 
-        if(container == null){  // hvis der ikke findes et spil lav et nyt
+        if(container == null || container.getGalgelogik().erSpilletSlut()){  // hvis der ikke findes et spil lav et nyt
+            if(container != null){
+                gamelist.remove(userid); // slet spil som måtte lige der i forvejen.
+            }
             try {
                 brugerautorisation.Galgeleg.Galgelogik logik = new brugerautorisation.Galgeleg.Galgelogik();
                 logik.hentOrdFraDr();
@@ -65,8 +66,9 @@ public class MainController {
                 e.printStackTrace();
             }
         }
-        logStatus(userid);
-        return false;  // resume game
+            logStatus(userid);
+            return false;  // resume game
+
     }
 
     public String getScoreboardAsJson() throws IOException {
@@ -87,7 +89,7 @@ public class MainController {
     public boolean tjekWin(String userid) throws RemoteException {
         Container container =  findegame(userid);  // find gamelt spil
         boolean winBool = container.getGalgelogik().erSpilletVundet();
-
+        container.getGalgelogik().setAktiv(false);
         if(winBool) {
             SaveContainer saveContainer = new SaveContainer();
             SaveAndLoadScoreboard file = new SaveAndLoadScoreboard();
@@ -119,7 +121,8 @@ public class MainController {
         }
         return false;
         */
-        gamelist.remove(userid);
+        //gamelist.remove(userid);
+        gamelist.get(userid).setAktiv(false);
         return true;
     }
 

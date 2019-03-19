@@ -1,4 +1,4 @@
-package SaveScoreboardFile;
+package Controller.SaveScoreboardFile;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

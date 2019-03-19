@@ -1,11 +1,13 @@
-package SOAP;
+package Test;
+
+import SOAP.ISOAPAdapter;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class clientTest {
+public class SOAPclientTest {
 
         public static void main(String[] args) throws MalformedURLException {
             URL url = new URL("http://130.225.170.204:1791/SOAPService?wsdl");

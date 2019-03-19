@@ -1,8 +1,5 @@
 package SOAP;
 
-import Galgeleg.SOAP.ISOAPGelgeleg;
-import Galgeleg.SOAP.SOAPGalgelogik;
-
 import javax.xml.ws.Endpoint;
 
 

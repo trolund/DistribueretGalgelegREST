@@ -1,18 +1,12 @@
 package REST;
 
 import Controller.MainController;
-import POJO.LoginFormPOJO;
-import SOAP.ISOAPAdapter;
-import SOAP.SOAPAdapter;
-import SOAP.SOAPServer;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.ws.Endpoint;
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 
 @Path("/game")
 public class GameService {

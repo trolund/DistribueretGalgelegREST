@@ -1,6 +1,8 @@
-package SOAP;
+package Test;
 
-public class ServerTest {
+import SOAP.SOAPServer;
+
+public class SOAPServerTest {
 
     public static void main(String[] args) {
         SOAPServer server = new SOAPServer();
