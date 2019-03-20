@@ -79,3 +79,15 @@ String.prototype.replaceAll = function (search, replacement) {
     var target = this;
     return target.split(search).join(replacement);
 };
+
+
+function myFunction() {
+    var val = document.getElementById("input").value;
+    var a = document.getElementsByTagName('a'),
+        length = a.length;
+    for(var i=0; i< length; i++){
+        a[i].href += '?userid=' + val;
+    }
+}
+
+

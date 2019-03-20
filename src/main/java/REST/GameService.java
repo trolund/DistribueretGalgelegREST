@@ -15,11 +15,52 @@ public class GameService {
 
     @GET
     public String getDiscription(){
-        return "<p>Du bliver nød til at specificere hvilke resurse du ønsker. \n" +
-                "kunne det være:</p>\n" +
-                "<p>for at få syndligt ord: GET </p><a href=\"game/synligtord\">game/synligtord</a>" +
-                "<p>for at gætte er bogstav: POST </p><a href=\"game/geatbogstav\">game/geatbogstav</a>" +
-                "<p>AntalForkerteBogstaver : POST </p><a href=\"game/AntalForkerteBogstaver\">game/AntalForkerteBogstaver</a>";
+        return "<html>" +
+                "<head>\n" +
+                "  <meta charset=\"UTF-8\">\n" +
+                "<script>\n" +
+                "var val;" +
+                "function myFunction() {\n" +
+                "val = document.getElementById(\"input\").value;\n" +
+                "var a = document.getElementsByTagName('a'),\n" +
+                "    length = a.length;" +
+                "\n" +
+                "for(var i=0; i< length; i++){\n" +
+                "    a[i].href += '?userid=' + val;\n" +
+                "}" +
+                "}" +
+                "function myGess() {\n" +
+                "    var gessVal = document.getElementById(\"gessVal\").value;\n" +
+                "    document.getElementById('gess').href = 'game/geatbogstav?userid=' + val + '?letter=' + gessVal;\n" +
+                "DoPost(gessVal);" +
+                "}" +
+                "function DoPost(gess){\n" +
+                "      $.post(\"game/getAntalForkerteBogstaver\", { userid: \"val\", letter: \"gess\" } );  //Your values here..\n" +
+                "   }" +
+                "</script>" +
+                "</head><body>" +
+                "<p>Du bliver nød til at specificere hvilke resurse du ønsker.<br> \n <h3>Hvad er dit brugernavn?</h3><br>\n" +
+                "  <form>\n" +
+                "    <input id=\"input\" type=\"text\" name=\"brugernavn\">\n" +
+                "  </form>" +
+                "<button onclick=\"myFunction()\">Angiv brugernavn</button>\n" +
+                "<br>Kunne det være:</p>\n" +
+                "<p>For at få hele ordet ord: GET </p><a href=\"game/word\">game/word</a>" +
+                "<p>Forlad spillet: GET </p><a href=\"game/gameExist\">game/gameExist</a>" +
+                "<p>Se vinder log: GET </p><a href=\"game/getScoreboard\">game/getScoreboard</a>" +
+                "<p>Se brugte bogstaver for spil: GET </p><a href=\"game/usedLetters\">game/usedLetters</a>" +
+                "<p>Se om spillet er igang: GET </p><a href=\"game/ongoingGame\">game/ongoingGame</a>" +
+                "<p>Slet spil: DELETE </p><a href=\"game/destroyGame\">game/destroyGame</a>" +
+                "<p>Tjek om spillet er vundet: GET </p><a href=\"game/tjekWin\">game/tjekWin</a>" +
+                "<p>Gennem tving sletning af spil: POST </p><a href=\"game/forceDeleteGame\">game/forceDeleteGame</a>" +
+                "<p>Gennem tving nyt spil: POST </p><a href=\"game/forceNewGame\">game/forceNewGame</a>" +
+                "<p>Nyt spil: POST </p><a href=\"game/newGame\">game/newGame</a>" +
+                "<p>For at få syndligt ord: GET </p><a href=\"game/synligtord\">game/synligtord</a>" +
+                "<p>For at gætte er bogstav: POST </p><a id=\"gess\" href=\"game/geatbogstav\">game/geatbogstav</a>" +
+                "<input id=\"gessVal\" type=\"text\" name=\"brugernavn\">\n" +
+                "<button onclick=\"myGess()\">Angiv bogstav</button>\n" +
+                "<p>AntalForkerteBogstaver : GET </p><a href=\"game/getAntalForkerteBogstaver\">game/getAntalForkerteBogstaver</a>"+
+                "</body></html>";
     }
 
     @POST
